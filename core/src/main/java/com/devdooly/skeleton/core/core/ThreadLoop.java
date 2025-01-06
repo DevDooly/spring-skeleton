@@ -2,9 +2,26 @@ package com.devdooly.skeleton.core.core;
 
 public interface ThreadLoop extends Runnable {
 
-    void startLoop();
+    default String name() {
+        String name = getClass().getSimpleName();
+        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+    }
 
-    void stopLoop();
+    default boolean onVirtual() {
+        return true;
+    }
 
-    boolean isRunning();
+    default void go() {
+        if (onVirtual()) {
+            Thread.ofVirtual()
+                    .name(name())
+                    .start(this);
+        } else {
+            Thread.ofPlatform()
+                    .name(name())
+                    .daemon(false)
+                    .start(this);
+        }
+    }
+
 }

@@ -19,7 +19,7 @@
     <modules>
         <module>common</module>
         <module>core</module>
-        <module>event-listener</module>
+        <module>zombie-listener</module>
     </modules>
 
     <properties>
@@ -29,7 +29,49 @@
         <h2database.version>2.2.224</h2database.version>
         <mysql.version>8.0.19</mysql.version>
         <spring-boot-starter-data-jpa.version>3.1.0</spring-boot-starter-data-jpa.version>
+        <jdbi.version>3.28.0</jdbi.version>
+        <oracle.jdbc.version>12.2.0.1</oracle.jdbc.version>
+        <junit.version>4.13</junit.version>
+        <HikariCP.version>5.0.1</HikariCP.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Database -->
+            <dependency>
+                <groupId>org.jdbi</groupId>
+                <artifactId>jdbi3-core</artifactId>
+                <version>${jdbi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jdbi</groupId>
+                <artifactId>jdbi3-sqlobject</artifactId>
+                <version>${jdbi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${HikariCP.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.oracle.database.jdbc</groupId>
+                <artifactId>ojdbc8</artifactId>
+                <version>${oracle.jdbc.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

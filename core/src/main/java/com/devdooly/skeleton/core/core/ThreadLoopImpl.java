@@ -1,56 +1,47 @@
 package com.devdooly.skeleton.core.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public abstract class ThreadLoopImpl implements ThreadLoop {
 
-    private static final Logger logger = LoggerFactory.getLogger(ThreadLoopImpl.class);
-
-    private volatile boolean running = false;
-    private Thread thread;
+    private volatile boolean active = false;
+    private volatile boolean finish = false;
 
     @Override
-    public void startLoop() {
-        if (running) {
-            logger.warn("Loop is already running.");
-            return;
+    public void run() {
+        active = true;
+        log.info("{} loop start.", name());
+        preProcess();
+
+        while (isActive()) {
+            process();
         }
 
-        running = true;
-        thread = new Thread(() -> {
-            logger.info("Loop started.");
-
-            while (running) {
-                performTask();
-            }
-            logger.info("Loop stopped.");
-        });
-        thread.start();
+        postProcess();
+        finish = true;
+        log.info("{} loop end.", name());
     }
 
-    @Override
-    public void stopLoop() {
-        if (!running) {
-            logger.warn("Loop is not running.");
-            return;
-        }
+    protected abstract void process();
 
-        running = false;
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            logger.error("Thread interrupted while stopping", e);
+    protected void preProcess() {
+    }
+
+    protected void postProcess() {
+    }
+
+    public final void stop() {
+        if (active) {
+            active = false;
         }
     }
 
-    @Override
-    public boolean isRunning() {
-        return running;
+    public final boolean isActive() {
+        return active;
     }
 
-    protected void performTask() {
-
+    public final boolean hasFinished() {
+        return finish;
     }
 }
