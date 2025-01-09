@@ -1,0 +1,15 @@
+{
+    "type": "record",
+    "name": "TestAvro",
+    "namespace": "com.devdooly.skeleton.avro.schema",
+    "fields": [
+        {
+            "name": "id",
+            "type": "long"
+        },
+        {
+            "name": "name",
+            "type": "string"
+        }
+    ]
+ }
