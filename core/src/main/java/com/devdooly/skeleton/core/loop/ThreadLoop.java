@@ -1,4 +1,4 @@
-package com.devdooly.skeleton.core.core;
+package com.devdooly.skeleton.core.loop;
 
 public interface ThreadLoop extends Runnable {
 

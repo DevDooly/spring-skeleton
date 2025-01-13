@@ -1,6 +1,6 @@
 package com.devdooly.skeleton.listener.zombie.core;
 
-import com.devdooly.skeleton.core.core.ThreadLoopImpl;
+import com.devdooly.skeleton.core.loop.ThreadLoopImpl;
 import com.devdooly.skeleton.listener.zombie.service.ZombieService;
 import lombok.extern.slf4j.Slf4j;
 

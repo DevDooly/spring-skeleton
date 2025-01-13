@@ -1,4 +1,4 @@
-package com.devdooly.skeleton.core.core;
+package com.devdooly.skeleton.core.loop;
 
 import lombok.extern.slf4j.Slf4j;
 
