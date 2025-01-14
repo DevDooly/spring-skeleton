@@ -7,7 +7,7 @@ import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.consumer.OffsetAndMEtadata;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.WakeupException;
 
@@ -30,11 +30,11 @@ public class KafkaListener<K, V> extends ThreadLoopImpl implements ConsumerRebal
     private volatile long lastCommit;
 
     public KafkaListener(KafkaConsumer<K, V> kafkaConsumer,
-                        RecordConsumer<K, V> recordConsumer,
-                        List<String> topics,
-                        long messagePollTimeout,
-                        long commitInterval,
-                        int commitBatchSize) {
+                         RecordConsumer<K, V> recordConsumer,
+                         List<String> topics,
+                         long messagePollTimeout,
+                         long commitInterval,
+                         int commitBatchSize) {
         this.kafkaConsumer = kafkaConsumer;
         this.recordConsumer = recordConsumer;
         this.topics = topics;
@@ -64,7 +64,7 @@ public class KafkaListener<K, V> extends ThreadLoopImpl implements ConsumerRebal
     public void process() {
         try {
             ConsumerRecords<K, V> records = kafkaConsumer.poll(Duration.ofMillis(messagePollTimeout));
-            if (records.count() >0) {
+            if (records.count() > 0) {
                 log.debug("kafka consumed records: {}", records.count());
                 for (ConsumerRecord<K, V> record : records) {
                     recordConsumer.consume(record);
@@ -112,8 +112,9 @@ public class KafkaListener<K, V> extends ThreadLoopImpl implements ConsumerRebal
 
     private void doCommit() {
         if (!offsetMap.isEmpty()) {
-            offsetMap.forEach((k, v) -> log.info("doCommit: topic={}, partition={}, offset={}, leaderEpoch={}, metadata={}",
-            k.topic(), k.partition(), v.offset(), v.leaderEpoch(), v.metadata()));
+            offsetMap.forEach((k, v) ->
+                    log.info("doCommit: topic={}, partition={}, offset={}, leaderEpoch={}, metadata={}",
+                            k.topic(), k.partition(), v.offset(), v.leaderEpoch(), v.metadata()));
             try {
                 kafkaConsumer.commitSync(offsetMap);
                 offsetMap.clear();

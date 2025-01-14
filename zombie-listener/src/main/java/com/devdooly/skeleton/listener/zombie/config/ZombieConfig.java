@@ -6,6 +6,7 @@ import com.devdooly.skeleton.core.config.JdbcConfig;
 import com.devdooly.skeleton.core.kafka.KafkaConsumerProperties;
 import com.devdooly.skeleton.core.kafka.RecordConsumer;
 import com.devdooly.skeleton.core.service.JdbcDataService;
+import com.devdooly.skeleton.listener.zombie.core.ZombieConsumer;
 import com.devdooly.skeleton.listener.zombie.core.ZombieListener;
 import com.devdooly.skeleton.listener.zombie.core.ZombieProperties;
 import com.devdooly.skeleton.listener.zombie.service.ZombieService;
@@ -23,17 +24,22 @@ public class ZombieConfig {
 
     @Bean
     public ZombieListener zombieListener(KafkaConsumer<String, TestAvro> kafkaConsumer,
-                                         RecordConsumer<String, TestAvro> recordConsumer,
+                                         RecordConsumer<String, TestAvro> zombieConsumer,
                                          ZombieProperties zombieProperties) {
         final long messagePollTimeout = zombieProperties.messagePollTimeout;
         final long commitInterval = zombieProperties.commitInterval;
         final int commitBatchSize = zombieProperties.commitBatchSize;
-        return new ZombieListener(kafkaConsumer, recordConsumer, messagePollTimeout, commitInterval, commitBatchSize);
+        return new ZombieListener(kafkaConsumer, zombieConsumer, messagePollTimeout, commitInterval, commitBatchSize);
     }
 
     @Bean
     public KafkaConsumer<String, TestAvro> kafkaConsumer(KafkaConsumerProperties kafkaConsumerProperties) {
         return new KafkaConsumer<>(kafkaConsumerProperties.asProperties());
+    }
+
+    @Bean
+    public RecordConsumer<String, TestAvro> zombieConsumer() {
+        return new ZombieConsumer();
     }
 
     @Bean
