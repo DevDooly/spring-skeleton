@@ -38,8 +38,13 @@ public class ZombieConfig {
     }
 
     @Bean
-    public RecordConsumer<String, TestAvro> zombieConsumer() {
-        return new ZombieConsumer();
+    public RecordConsumer<String, TestAvro> zombieConsumer(ZombieProcessor zombieProcessor) {
+        return new ZombieConsumer(zombieProcessor);
+    }
+
+    @Bean
+    public ZombieProcessor zombieProcessor() {
+        return new ZombieProcessor();
     }
 
     @Bean
