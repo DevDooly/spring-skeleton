@@ -1,6 +1,6 @@
 {
     "type": "record",
-    "name": "TestAvro",
+    "name": "UserAvro",
     "namespace": "com.devdooly.skeleton.avro.schema",
     "fields": [
         {
@@ -9,6 +9,10 @@
         },
         {
             "name": "name",
+            "type": "string"
+        },
+        {
+            "name": "password",
             "type": "string"
         }
     ]

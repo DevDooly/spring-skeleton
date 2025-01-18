@@ -10,8 +10,8 @@ public class VirtualFuture<T> {
     private final CompletableFuture<T> future;
 
     public VirtualFuture(Supplier<? extends T> task) {
-        future = new CompetableFuture<>();
-        THread.startVirtualTHread(() -> {
+        future = new CompletableFuture<>();
+        Thread.startVirtualThread(() -> {
             try {
                 future.complete(task.get());
             } catch (Exception e) {
