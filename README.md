@@ -1,6 +1,16 @@
 # SPRING SKELETON
 
 ## FEATURE
+* Main Thread
+  * ThreadLoopImpl (SingleThread::PlatformThread)
+* DataStream
+  * KafkaListener  (Kafka, Avro)
+* DB
+  * MySql (JDBC, Hibernate)
+* Web
+  * WebFlux
+
+## File Structure
 * avro-lib
   * UserAvro.java
   * user.avsc
