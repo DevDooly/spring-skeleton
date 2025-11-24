@@ -4,7 +4,7 @@ Kafka, DB 사용가능한 뼈대 프로젝트
 
 ## FEATURE
 * Thread
-* JDBC
+* DB (jdbi + hikariCP)
 * Kafka (with avro)
 
 ## Structure
