@@ -17,12 +17,24 @@ public class JdbcDataServiceImpl implements JdbcDataService, Closeable {
         this.destoryer = destroyer;
     }
 
+    @Override
     public String findNowByDateFormat(String dateFormat) {
         return jdbcRepository.findNowByDateFormat(dateFormat);
     }
 
+    @Override
     public User findUserById(Long id) {
         return jdbcRepository.findUserById(id);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        jdbcRepository.saveUser(user);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        jdbcRepository.updateUser(user);
     }
 
     @Override

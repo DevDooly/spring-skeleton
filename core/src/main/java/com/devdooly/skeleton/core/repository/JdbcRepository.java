@@ -15,4 +15,14 @@ public interface JdbcRepository {
     @RegisterBeanMapper(User.class)
     User findUserById(@Bind("id") Long id);
 
+    @SqlUpdate("""
+        INSERT INTO USER (ID, USER_NAME, PASSWORD)
+                VALUES (:id, :userName, :password)""")
+    void saveUser(@BindBean User user);
+
+    @SqlUpdate("""
+        UPDATE USER 
+        SET ID = :id, USER_NAME = :userName, PASSWORD = :password
+        WHERE ID = :id""")
+    void updateUser(@BindBean User user);
 }

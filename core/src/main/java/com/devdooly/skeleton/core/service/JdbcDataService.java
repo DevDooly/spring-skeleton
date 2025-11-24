@@ -8,4 +8,7 @@ public interface JdbcDataService {
 
     User findUserById(Long id);
 
+    void saveUser(User user);
+
+    void updateUser(User user);
 }
