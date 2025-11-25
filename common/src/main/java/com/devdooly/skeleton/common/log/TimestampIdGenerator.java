@@ -1,6 +1,6 @@
 package com.devdooly.skeleton.common.log;
 
-import com.devdooly.skeleton.common.utils.CommonUtils.;
+import com.devdooly.skeleton.common.utils.CommonUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TimestampIdGenerator implements IdGenerator {
     private final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     private final String prefix;
-    private final AtomicLong sequence;
+    private final AtomicInteger sequence;
 
     public TimestampIdGenerator(String id) {
         prefix = id + "_";
@@ -24,5 +24,4 @@ public class TimestampIdGenerator implements IdGenerator {
     private String getSeq() {
         return CommonUtils.padding(4, '0', Long.toHexString(0xffff & sequence.incrementAndGet()));
     }
-
 }

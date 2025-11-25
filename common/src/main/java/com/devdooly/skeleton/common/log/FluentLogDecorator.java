@@ -5,16 +5,13 @@ import org.slf4j.spi.LoggingEventBuilder;
 
 import java.util.function.Function;
 
-public class UniqueIdLogDecorator implements LogDecorator {
+public class FluentLogDecorator  implements LogDecorator {
     private final String tId;
     private final String prefix;
     private final Function<LoggingEventBuilder, LoggingEventBuilder> decorator;
 
     public FluentLogDecorator(String tId) {
-        this(tId, buildPrefix(tId), builder -> builder.addKeyValue("tId", tid)) {
-
-    }
-
+        this(tId, buildPrefix(tId), builder -> builder.addKeyValue("tId", tId));
     }
 
     private FluentLogDecorator(String tId, String prefix, Function<LoggingEventBuilder, LoggingEventBuilder> decorator) {
@@ -83,7 +80,7 @@ public class UniqueIdLogDecorator implements LogDecorator {
 
     @Override
     public void error(Logger logger, Throwable t, String msg) {
-        decorator.apply(logger.atError()).setCause(t).log(addPrefix(format));
+        decorator.apply(logger.atError()).setCause(t).log(addPrefix(msg));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.devdooly.skeleton.common.log;
 
+import com.devdooly.skeleton.common.utils.StringUtil;
 import org.slf4j.Logger;
 
 public class UniqueIdLogDecorator implements LogDecorator {
@@ -11,7 +12,7 @@ public class UniqueIdLogDecorator implements LogDecorator {
         this.prefix = "[" + decoration + "] ";
     }
 
-    private String formatting(String format {
+    private String formatting(String format) {
         return prefix + format;
     }
 
@@ -81,13 +82,12 @@ public class UniqueIdLogDecorator implements LogDecorator {
     public void error(Logger logger, Throwable t, String msg) {
         if (logger.isErrorEnabled())
             logger.error(formatting(msg), t);
-
-
     }
+
     @Override
     public void error(Logger logger, Throwable t, String format, Object... args) {
         if (logger.isErrorEnabled())
-            logger.error(String.simpleFormat(formatting(format), args), t);
+            logger.error(StringUtil.simpleFormat(formatting(format), args), t);
     }
 
     @Override

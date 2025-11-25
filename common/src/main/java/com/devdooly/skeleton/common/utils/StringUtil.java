@@ -17,7 +17,7 @@ public final class StringUtil {
         if (format == null)
             return "null";
 
-        StringBuilder sb = new String Builder();
+        StringBuilder sb = new StringBuilder();
         int end = format.length();
         int argIdx = 0;
         for (int pos = 0; pos < end; pos++) {
@@ -39,7 +39,7 @@ public final class StringUtil {
                     sb.append(format.charAt(next));
                     pos = next;
                 }
-            } else { 
+            } else {
                 sb.append(c);
             }
         }
@@ -50,49 +50,50 @@ public final class StringUtil {
      * {index[,alignment]} e.g {0,+16}
      * index : start with 0 index.
      * alignment : (optional) signed decimal number. The rest of length will be padded by white space(+:right align, -:left align).
+     *
      * @param format format string
-     * @param args values to replace the index with. the order of values matches the index.
+     * @param args   values to replace the index with. the order of values matches the index.
      */
-     public static String format(String format, Object... args) {
-         if (format == null) {
-             return "null";
-         }
+    public static String format(String format, Object... args) {
+        if (format == null) {
+            return "null";
+        }
 
-         int next = 0;
-         int startIdx;
-         int endIdx;
-         StringBuilder sb = new StringBuilder();
-         for (Matcher matcher = formatPattern.matcher(format); matcher.find(); next = endIdx) {
-             startIdx = matcher.start();
-             endIdx = matcher.end();
-             String[] holder = format.substring(startIdx + 1, endIdx - 1).split(",");
-             int argIdx = Integer.parseInt(holder[0]);
-             if (argIdx >= args.length) {
-                 sb.append(format, next, endIdx);
-             } else {
-                 sb.append(format, next, startIdx);
-                 formatting(sb, older.length == 2 ? holder[1] : null, args[argIdx]);
-             }
-         }
+        int next = 0;
+        int startIdx;
+        int endIdx;
+        StringBuilder sb = new StringBuilder();
+        for (Matcher matcher = formatPattern.matcher(format); matcher.find(); next = endIdx) {
+            startIdx = matcher.start();
+            endIdx = matcher.end();
+            String[] holder = format.substring(startIdx + 1, endIdx - 1).split(",");
+            int argIdx = Integer.parseInt(holder[0]);
+            if (argIdx >= args.length) {
+                sb.append(format, next, endIdx);
+            } else {
+                sb.append(format, next, startIdx);
+                formatting(sb, holder.length == 2 ? holder[1] : null, args[argIdx]);
+            }
+        }
 
-         return next < format.length() ? sb.append(format, next, format.length()).toString() : sb.toString();
-     }
+        return next < format.length() ? sb.append(format, next, format.length()).toString() : sb.toString();
+    }
 
-     private static void formatting(StringBuilder sb, String alignment, Object arg) {
-         if (alignment == null) {
-             sb.append(arg);
-         } else {
-             String s = String.valueOf(arg);
-             int padding = Integer.parseInt(alignment.substring(1)) - s.length();
-             if (padding < 0) padding =0;
+    private static void formatting(StringBuilder sb, String alignment, Object arg) {
+        if (alignment == null) {
+            sb.append(arg);
+        } else {
+            String s = String.valueOf(arg);
+            int padding = Integer.parseInt(alignment.substring(1)) - s.length();
+            if (padding < 0) padding = 0;
 
-             if (alignment.charAt(0) == '-') {
-                 sb.append(s);
-                 sb.append(" ".repeat(padding));
-             } else {
-                 sb.append(" ".repeat(padding));
-                 sb.append(s);
-             }
-         }
-     }
+            if (alignment.charAt(0) == '-') {
+                sb.append(s);
+                sb.append(" ".repeat(padding));
+            } else {
+                sb.append(" ".repeat(padding));
+                sb.append(s);
+            }
+        }
+    }
 }

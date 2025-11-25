@@ -7,7 +7,7 @@ public class NamedThreadFactory implements ThreadFactory {
     private final ThreadGroup group;
     private final AtomicInteger threadNumber = new AtomicInteger(0);
     private final String namePrefix;
-    private int threadPriority;
+    private final int threadPriority;
     private final boolean isDaemon;
 
     NamedThreadFactory(ThreadGroup threadGroup, String poolName, int threadPriority, boolean isDaemon) {

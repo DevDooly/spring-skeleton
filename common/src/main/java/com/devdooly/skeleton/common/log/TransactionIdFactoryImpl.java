@@ -1,5 +1,7 @@
 package com.devdooly.skeleton.common.log;
 
+import java.util.function.Function;
+
 public class TransactionIdFactoryImpl implements TransactionIdFactory {
     private final IdGenerator idGenerator;
     private final Function<String, LogDecorator> logDecoratorSupplier;

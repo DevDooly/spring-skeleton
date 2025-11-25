@@ -16,7 +16,8 @@ public class SequentialIdGenerator implements IdGenerator {
         }
         this.prefix = prefix + "_";
         this.sequence = new AtomicLong(0);
-        this.mask = getMask(sequeneLength);
+        this.sequenceLength = sequenceLength;
+        this.mask = getMask(sequenceLength);
     }
 
     @Override
