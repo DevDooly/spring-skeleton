@@ -1,11 +1,6 @@
 package com.devdooly.skeleton.common.utils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.NumberFormat;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Random;
 
 public class CommonUtils {
 
@@ -24,7 +19,7 @@ public class CommonUtils {
         } else if (n == 1) {
             return v;
         } else {
-            long half = pow(v, n/2);
+            long half = pow(v, n / 2);
             if (n % 2 == 0) {
                 return half * half;
             } else {
@@ -33,4 +28,9 @@ public class CommonUtils {
         }
     }
 
+    public static String formatting(long num) {
+        return NumberFormat.getInstance().format(num);
+    }
+
 }
+

@@ -1,7 +1,8 @@
 package com.devdooly.skeleton.common.log;
 
-import com.devdooly.skeleton.common.utils.StringUtil;
 import org.slf4j.Logger;
+
+import java.text.MessageFormat;
 
 public class UniqueIdLogDecorator implements LogDecorator {
     private final Object decoration;
@@ -87,7 +88,7 @@ public class UniqueIdLogDecorator implements LogDecorator {
     @Override
     public void error(Logger logger, Throwable t, String format, Object... args) {
         if (logger.isErrorEnabled())
-            logger.error(StringUtil.simpleFormat(formatting(format), args), t);
+            logger.error(MessageFormat.format(formatting(format), args), t);
     }
 
     @Override
