@@ -3,6 +3,7 @@
 Kafka, DB 사용가능한 뼈대 프로젝트
 
 ## FEATURE
+* Avro (format)
 * Thread
 * DB (jdbi + hikariCP)
 * Kafka (with avro)
@@ -11,8 +12,11 @@ Kafka, DB 사용가능한 뼈대 프로젝트
 * avro-lib
 * common
   * Thread
+  * Log
+  * Utils
 * core
   * Kafka
   * JDBC
+  * Web
 * sample code
   * zombie-listener
