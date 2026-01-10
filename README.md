@@ -8,6 +8,8 @@ Kafka, DB 사용가능한 뼈대 프로젝트
 * DB (jdbi + hikariCP)
 * Kafka (with avro)
 
+<img src="./assets/structure_v01.png" title="feature" alt=""/>
+
 ## Structure
 * avro-lib
 * common
