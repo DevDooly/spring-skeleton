@@ -14,6 +14,7 @@
 ## 프로젝트 구조
 
 이 프로젝트는 **MSA(Microservices Architecture) 기반**으로 설계되어 여러 모듈로 나뉘며, 각 모듈은 특정 역할을 가집니다:
+현재는 zombie-listener 만 구현되어 있으나, 목적에 맞게 애플리케이션을 구성하여 KAFKA 를 파이프라인으로 서비스간 의존도를 낮췄습니다.
 
 <img src="./assets/structure_v01.png" title="feature" alt=""/>
 
