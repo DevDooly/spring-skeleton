@@ -1,4 +1,4 @@
-package com.devdooly.skeleton.utils;
+package com.devdooly.skeleton.utils.lambda;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class LambdaTest {
+public class LambdaBasicTest {
 
     @Test
     public void lambdaTest() {

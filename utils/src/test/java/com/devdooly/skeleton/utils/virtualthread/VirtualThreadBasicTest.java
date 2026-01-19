@@ -1,4 +1,4 @@
-package com.devdooly.skeleton.utils;
+package com.devdooly.skeleton.utils.virtualthread;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +15,7 @@ import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class VirtualThreadTest {
+public class VirtualThreadBasicTest {
 
     @Test
     public void virtualThreadTest() throws InterruptedException {

@@ -1,4 +1,4 @@
-package com.devdooly.skeleton.utils;
+package com.devdooly.skeleton.utils.collection;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThrows;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CollectionTest {
+public class CollectionFactoryTest {
 
     @Test
     public void listOfTest() {

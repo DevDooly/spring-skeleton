@@ -1,4 +1,4 @@
-package com.devdooly.skeleton.utils;
+package com.devdooly.skeleton.utils.stream;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class StreamTest {
+public class StreamBasicTest {
 
     @Test
     public void streamMapTest() {
