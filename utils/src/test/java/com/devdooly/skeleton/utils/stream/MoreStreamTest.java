@@ -53,4 +53,42 @@ public class MoreStreamTest {
         long count = Stream.of("one", "two", "three").count();
         assertEquals(3, count);
     }
+
+    @Test
+    public void filterWithPredicateTest() {
+        List<String> names = Arrays.asList("Alice", "Bob", "Charlie", "David", "Eve");
+
+        // Predicate for names starting with 'A'
+        java.util.function.Predicate<String> startsWithA = name -> name.startsWith("A");
+        List<String> filteredNamesA = names.stream()
+                .filter(startsWithA)
+                .collect(Collectors.toList());
+        assertEquals(Arrays.asList("Alice"), filteredNamesA);
+
+        // Predicate for names longer than 3 characters
+        java.util.function.Predicate<String> longerThan3 = name -> name.length() > 3;
+        List<String> filteredNamesLongerThan3 = names.stream()
+                .filter(longerThan3)
+                .collect(Collectors.toList());
+        assertEquals(Arrays.asList("Alice", "Charlie", "David"), filteredNamesLongerThan3);
+
+        // Chaining predicates: names starting with 'A' AND longer than 3
+        List<String> filteredNamesAAndLongerThan3 = names.stream()
+                .filter(startsWithA.and(longerThan3))
+                .collect(Collectors.toList());
+        assertEquals(Arrays.asList("Alice"), filteredNamesAAndLongerThan3);
+
+        // Chaining predicates: names starting with 'A' OR 'B'
+        java.util.function.Predicate<String> startsWithB = name -> name.startsWith("B");
+        List<String> filteredNamesAOrB = names.stream()
+                .filter(startsWithA.or(startsWithB))
+                .collect(Collectors.toList());
+        assertEquals(Arrays.asList("Alice", "Bob"), filteredNamesAOrB);
+
+        // Negating a predicate: names NOT starting with 'A'
+        List<String> filteredNamesNotA = names.stream()
+                .filter(startsWithA.negate())
+                .collect(Collectors.toList());
+        assertEquals(Arrays.asList("Bob", "Charlie", "David", "Eve"), filteredNamesNotA);
+    }
 }
