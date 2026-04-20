@@ -38,6 +38,7 @@
         <kafka-avro-serializer.version>7.8.0</kafka-avro-serializer.version>
         <avro.version>1.12.0</avro.version>
         <snappy.version>1.1.10.5</snappy.version>
+        <caffeine.version>3.1.8</caffeine.version>
     </properties>
 
     <repositories>
@@ -49,6 +50,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Cache -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
             <!-- Database -->
             <dependency>
                 <groupId>org.jdbi</groupId>
