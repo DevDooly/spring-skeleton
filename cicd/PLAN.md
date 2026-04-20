@@ -1,19 +1,20 @@
 # CI/CD Pipeline Implementation Plan
 
-본 문서는 Spring Boot 멀티 모듈 프로젝트의 자동화된 빌드, 배포 환경 구축 계획을 담고 있습니다.
+본 문서는 Spring Boot 멀티 모듈 프로젝트의 자동화된 빌드, 배포 환경 구축 계획 및 결과입니다.
 
 ## 1. 아키텍처 개요
 전형적인 **GitOps** 모델을 따르며, 빌드(CI)와 배포(CD)를 분리하여 운영 효율성과 보안성을 높입니다.
 
 - **CI (Continuous Integration)**: Jenkins
   - 소스 코드 변경 감지 (Webhook)
-  - Maven 빌드 및 테스트 (Java 25 환경)
-  - Docker 이미지 빌드 및 Registry(Docker Hub/ECR 등) Push
-- **CD (Continuous Deployment)**: ArgoCD
-  - Git 저장소의 Kubernetes Manifest(Helm/Kustomize) 감지
+  - Maven 빌드 및 테스트 (Java 21 환경)
+  - Docker 이미지 빌드 및 Registry(Local: `localhost:5000`) Push
+- **CD (Continuous Deployment)**: ArgoCD / kubectl
+  - Git 저장소의 Kubernetes Manifest 감지
   - 실제 클러스터 상태와 Git 상태를 동기화
 - **Containerization**: Docker
   - Multi-stage build를 통한 이미지 최적화
+  - Java 21 LTS 기반
 
 ---
 
@@ -22,24 +23,28 @@
 ### [Step 1] Docker 환경 구축 - [완료]
 - 멀티 모듈 프로젝트 특성을 고려한 `Dockerfile` 작성 완료
 - 위치: `cicd/docker/Dockerfile`
-- Java 25 기반 Multi-stage build 적용
+- Java 21 및 Maven 3.9.9 기반 Multi-stage build 적용
+- 포트 설정: **10080** (기존 8080 충돌 회피)
 
 ### [Step 2] Jenkins 파이프라인 구성 - [완료]
 - `Jenkinsfile` 정의 완료
 - 위치: `cicd/jenkins/Jenkinsfile`
-- 빌드, 테스트, Docker Image Build & Push 단계 포함
+- 로컬 레지스트리(`localhost:5000`) 사용 설정
 
-### [Step 3] Kubernetes Manifest & ArgoCD 설정 - [완료]
-- `k8s` 매니페스트 작성 완료
+### [Step 3] Kubernetes Manifest & Deployment - [완료]
+- `k8s` 매니페스트 작성 및 실제 배포 완료
 - 위치: `cicd/k8s/deployment.yaml`
-- ArgoCD에서 이 파일을 감지하여 자동 배포하도록 설정 가능
+- Kind 클러스터 내 `zombie-listener` 서비스 가동 중
+- 서비스 포트: 내부 `10080`, 외부(NodePort) `32626`
 
 ---
 
-## 3. 향후 과제 (Next Steps)
-1.  **ArgoCD 연동**: Kubernetes 클러스터에 ArgoCD를 설치하고 해당 Git 저장소를 연결합니다.
-2.  **Secret 관리**: DB 접속 정보, Kafka 설정 등을 K8s Secrets 또는 Vault로 관리하도록 고도화합니다.
-3.  **Helm Chart 전환**: 서비스 규모가 커질 경우 일반 Manifest에서 Helm Chart로 전환을 고려합니다.
+## 3. 주요 설정 정보
+- **Java Version**: 21 LTS (`--enable-preview` 활성화)
+- **Spring Boot**: 3.4.1
+- **Application Port**: 10080
+- **Database**: H2 (In-memory, MySQL Mode)
+- **Kafka**: Localhost:9092 (연결 시도 중)
 
 ---
-*이 문서는 진행 상황에 따라 지속적으로 업데이트됩니다.*
+*이 문서는 실제 배포 환경에 맞춰 최종 업데이트되었습니다.*

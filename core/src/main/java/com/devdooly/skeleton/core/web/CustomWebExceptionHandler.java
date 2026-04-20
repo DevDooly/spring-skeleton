@@ -11,11 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerCodecConfigurer;
-import org.springframework.web.reactive.function.server.RequestPredicates;
-import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.RouterFunctions;
-import org.springframework.web.reactive.function.server.ServerRequest;
-import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.reactive.function.server.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
@@ -31,7 +27,7 @@ public class CustomWebExceptionHandler extends AbstractErrorWebExceptionHandler 
     public CustomWebExceptionHandler(ErrorAttributes errorAttributes,
                                      WebProperties webProperties,
                                      ApplicationContext applicationContext,
-                                     ServerCodecConfigurer serverCOdecConfigurer,
+                                     ServerCodecConfigurer serverCodecConfigurer,
                                      CoreProperties coreProperties) {
         super(errorAttributes, webProperties.getResources(), applicationContext);
         super.setMessageWriters(serverCodecConfigurer.getWriters());
@@ -42,28 +38,30 @@ public class CustomWebExceptionHandler extends AbstractErrorWebExceptionHandler 
     }
 
     @Override
-    protected RouterFunction<ServerResponse> getRouterFunction(final ErrorAttributes errorAttributes) {
-        return RouterFunctions.route(RequestPredicates.all(), this::renderResponse);
+    protected RouterFunction<ServerResponse> getRoutingFunction(final ErrorAttributes errorAttributes) {
+        return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
     }
 
-    private Mono<ServerResponse> renderResponse(ServerRequest request) {
-        return Mono
-                .defer(() -> {
-                    final ErrorResponse errorResponse = buildErrorResponse(request);
-                    log.debug("web exception! {}", errorResponse);
-                    return Mono.just(errorResponse);
-                })
-                .flatMap(errorResponse -> ServerResponse
-                    .status(errorResponse.status)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(errorResponse), ErrorResponse.class));
+    private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
+        final ErrorResponse errorResponse = buildErrorResponse(request);
+        log.debug("web exception! {}", errorResponse);
+        return ServerResponse
+                .status(errorResponse.getStatus())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(errorResponse), ErrorResponse.class);
     }
 
     private ErrorResponse buildErrorResponse(ServerRequest request) {
         Throwable error = getError(request);
         int status = resolveStatus(error);
         String message = resolveMessage(error);
-        return new ErrorResponse(status, request.path(), message, NetUtils.getRemoteAddress(request), coreProperties.serverId);
+        return ErrorResponse.builder()
+                .status(status)
+                .path(request.path())
+                .message(message)
+                .remote(WebUtils.getRemoteHost(request))
+                .serverId(coreProperties.getServerId())
+                .build();
     }
 
     private int resolveStatus(Throwable throwable) {
@@ -82,4 +80,3 @@ public class CustomWebExceptionHandler extends AbstractErrorWebExceptionHandler 
         return throwable == null ? "unknown" : StringUtils.truncate(throwable.getMessage(), 100);
     }
 }
-            

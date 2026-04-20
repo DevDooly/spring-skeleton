@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = "your-docker-registry"
+        DOCKER_REGISTRY = "localhost:5000"
         IMAGE_NAME = "zombie-listener"
-        TAG = "${env.BUILD_NUMBER}"
+        TAG = "latest"
     }
 
     stages {

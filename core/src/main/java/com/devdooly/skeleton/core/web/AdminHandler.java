@@ -48,21 +48,15 @@ public class AdminHandler {
 
     public Mono<ServerResponse> drain() {
         return Mono.defer(() -> {
-            if (serverAdministrator.drain()) {
-                return ServerResponse.ok().build();
-            } else {
-                return ServerResponse.accepted().build();
-            }
+            serverAdministrator.drain();
+            return ServerResponse.ok().build();
         });
     }
 
     public Mono<ServerResponse> down() {
         return Mono.defer(() -> {
-            if (serverAdministrator.down()) {
-                return ServerResponse.ok().build();
-            } else {
-                return ServerResponse.accepted().build();
-            }
+            serverAdministrator.down();
+            return ServerResponse.ok().build();
         });
     }
 

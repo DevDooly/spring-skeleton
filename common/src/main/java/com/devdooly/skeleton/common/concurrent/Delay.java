@@ -15,7 +15,7 @@ public final class Delay {
     }
 
     public static void sleepMillis(long ms) {
-        sleep(ms, TimeUnit.MILLISECONS);
+        sleep(ms, TimeUnit.MILLISECONDS);
     }
 
     public static void sleepSeconds(long seconds) {

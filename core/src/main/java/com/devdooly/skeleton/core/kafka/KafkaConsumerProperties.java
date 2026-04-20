@@ -67,6 +67,10 @@ public interface KafkaConsumerProperties extends KafkaCommonProperties {
         return true;
     }
 
+    default String autoOffsetReset() {
+        return "latest";
+    }
+
     default int maxPollIntervalMs() {
         return 300000;
     }
@@ -99,11 +103,11 @@ public interface KafkaConsumerProperties extends KafkaCommonProperties {
         properties.put("heartbeat.interval.ms", heartbeatIntervalMs());
         properties.put("max.partition.fetch.bytes", maxPartitionFetchBytes());
         properties.put("session.timeout.ms", sessionTimeoutMs());
-        properties.put("auto.offset.reset", enableAutoCommit());
+        properties.put("auto.offset.reset", autoOffsetReset());
         properties.put("connections.max.idle.ms", connectionMaxIdleMs());
         properties.put("enable.auto.commit", enableAutoCommit());
         properties.put("max.poll.interval.ms", maxPollIntervalMs());
-        properties.put("mas.poll.records", maxPollRecords());
+        properties.put("max.poll.records", maxPollRecords());
         properties.put("partition.assignment.strategy", partitionAssignmentStrategy());
         properties.put("receive.buffer.bytes", receiveBufferBytes());
         properties.put("send.buffer.bytes", sendBufferBytes());

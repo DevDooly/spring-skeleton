@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM eclipse-temurin:25-jdk AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copy the pom.xml and source code
@@ -18,16 +18,16 @@ COPY zombie-listener/src zombie-listener/src
 COPY utils/src utils/src
 
 # Build the project
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime
-FROM eclipse-temurin:25-jre
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Copy the built jar from the build stage
 # Assuming we are deploying zombie-listener
 COPY --from=build /app/zombie-listener/target/zombie-listener-*.jar app.jar
 
-EXPOSE 8080
+EXPOSE 10080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "--enable-preview", "-jar", "app.jar"]

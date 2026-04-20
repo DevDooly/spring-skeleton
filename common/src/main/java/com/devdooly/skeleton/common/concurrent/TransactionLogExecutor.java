@@ -14,6 +14,7 @@ public class TransactionLogExecutor extends ThreadPoolExecutor {
 
     TransactionLogExecutor(int size, String prefix, TransactionIdFactory transactionIdFactory) {
         super(size, size, 0L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), NamedThreadFactory.create(prefix), new AbortPolicy());
+        this.transactionIdFactory = transactionIdFactory;
     }
 
     public final void execute(Consumer<TransactionId> runConsumer) {

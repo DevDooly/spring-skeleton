@@ -16,12 +16,41 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import com.devdooly.skeleton.core.properties.KafkaCommonProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 @Configuration
 @Import({
         CoreConfig.class,
         JdbcConfig.class
 })
 public class ZombieConfig {
+
+    @Bean
+    @ConfigurationProperties(prefix = "zombie")
+    public ZombieProperties zombieProperties() {
+        return new ZombieProperties();
+    }
+
+    @Bean
+    public KafkaConsumerProperties kafkaConsumerProperties(KafkaCommonProperties kafkaCommonProperties, ZombieProperties zombieProperties) {
+        return new KafkaConsumerProperties() {
+            @Override
+            public KafkaCommonProperties kafkaCommonProperties() {
+                return kafkaCommonProperties;
+            }
+
+            @Override
+            public String groupId() {
+                return "zombie-group";
+            }
+
+            @Override
+            public int maxPollRecords() {
+                return zombieProperties.maxPollRecords;
+            }
+        };
+    }
 
     @Bean
     public ZombieListener zombieListener(KafkaConsumer<String, UserAvro> kafkaConsumer,

@@ -23,7 +23,7 @@ public class WebHandlerFilterFunction implements HandlerFilterFunction<ServerRes
     public Mono<ServerResponse> filter(@NonNull ServerRequest request, @NonNull HandlerFunction<ServerResponse> next) {
         return Mono.defer(() -> {
             if (!serverAdministrator.isReady()) {
-                log.wran("service is unavailable now. status={}", serverAdministrator.getStatus());
+                log.warn("service is unavailable now. status={}", serverAdministrator.getStatus());
                 return Mono.error(new ServerUnavailableException("service is unavailable now"));
             } else {
                 return next.handle(request);
