@@ -46,6 +46,15 @@ kubectl get pods -l app=zombie-listener
 kubectl port-forward svc/zombie-listener 10080:80
 ```
 
+### API 문서 확인 (Scalar)
+Swagger UI보다 현대적이고 깔끔한 UI를 제공하는 Scalar가 적용되어 있습니다.
+
+```bash
+kubectl port-forward svc/zombie-listener 10080:80
+```
+- **주소**: `http://localhost:10080/scalar`
+- **OpenAPI Spec**: `http://localhost:10080/api-docs`
+
 ### 로그 모니터링 (Kibana)
 EFK 스택을 통해 로그를 시각화할 수 있습니다. Kibana 대시보드에 접속하려면 포트 포워딩을 설정하세요.
 

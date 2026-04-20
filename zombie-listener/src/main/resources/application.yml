@@ -7,6 +7,19 @@ spring:
     virtual:
       enabled: true
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    enabled: false # Disable Swagger UI in favor of Scalar
+  show-actuator: true
+
+scalar:
+  enabled: true
+  path: /scalar
+  openapi:
+    url: /api-docs
+
 ---
 spring:
   config:
