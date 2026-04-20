@@ -46,6 +46,15 @@ kubectl get pods -l app=zombie-listener
 kubectl port-forward svc/zombie-listener 10080:80
 ```
 
+### 로그 모니터링 (Kibana)
+EFK 스택을 통해 로그를 시각화할 수 있습니다. Kibana 대시보드에 접속하려면 포트 포워딩을 설정하세요.
+
+```bash
+kubectl port-forward -n kube-system svc/kibana 5601:5601
+```
+- **주소**: `http://localhost:5601`
+- **초기 설정**: `Stack Management` -> `Index Patterns`에서 `fluent-bit-*` 패턴을 생성하면 로그를 조회할 수 있습니다.
+
 ### 자동 테스트 스크립트 실행
 새 터미널을 열고 제공된 쉘 스크립트를 실행하여 API 동작을 검증합니다.
 
