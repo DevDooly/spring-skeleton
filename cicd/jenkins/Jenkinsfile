@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REGISTRY = "your-docker-registry"
+        IMAGE_NAME = "zombie-listener"
+        TAG = "${env.BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                sh './mvnw clean package'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${TAG} -f cicd/docker/Dockerfile ."
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                // Requires docker credentials configured in Jenkins
+                sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${TAG}"
+            }
+        }
+
+        stage('Update Manifest') {
+            steps {
+                // Update the image tag in the GitOps repository (or this repo's k8s folder)
+                sh "sed -i 's|image: .*|image: ${DOCKER_REGISTRY}/${IMAGE_NAME}:${TAG}|' cicd/k8s/deployment.yaml"
+                sh "git add cicd/k8s/deployment.yaml"
+                sh "git commit -m 'Update image tag to ${TAG}'"
+                sh "git push origin main"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "CI/CD Pipeline finished successfully!"
+        }
+        failure {
+            echo "CI/CD Pipeline failed."
+        }
+    }
+}

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zombie-listener
+  namespace: default
+  labels:
+    app: zombie-listener
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: zombie-listener
+  template:
+    metadata:
+      labels:
+        app: zombie-listener
+    spec:
+      containers:
+      - name: zombie-listener
+        image: your-docker-registry/zombie-listener:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zombie-listener
+  namespace: default
+spec:
+  selector:
+    app: zombie-listener
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
