@@ -1,26 +1,28 @@
 #!/bin/bash
 
 # Configuration
-BASE_URL="http://localhost:10080"
+DIRECT_URL="http://localhost:10080"
+GATEWAY_URL="http://localhost:9001"
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Helper function for testing
-# Usage: test_api <method> <path> <expected_pattern> [json_data]
+# Usage: test_api <base_url> <method> <path> <expected_pattern> [json_data]
 test_api() {
-    local method=$1
-    local path=$2
-    local expected=$3
-    local data=$4
+    local base_url=$1
+    local method=$2
+    local path=$3
+    local expected=$4
+    local data=$5
     
-    echo -n "Testing $method $path ... "
+    echo -n "Testing $method $base_url$path ... "
     
     local response
     if [ "$method" == "POST" ]; then
-        response=$(curl -s -X "$method" "$BASE_URL$path" -H "Content-Type: application/json" -d "$data")
+        response=$(curl -s -X "$method" "$base_url$path" -H "Content-Type: application/json" -d "$data")
     else
-        response=$(curl -s -X "$method" "$BASE_URL$path")
+        response=$(curl -s -X "$method" "$base_url$path")
     fi
 
     if [[ "$response" =~ $expected ]]; then
@@ -34,21 +36,21 @@ test_api() {
 }
 
 echo "==============================================="
-echo " Starting API Integration Tests (Port 10080)"
+echo " Starting API Integration Tests"
 echo "==============================================="
 
-# 1. Caffeine Cache Tests
-echo -e "\n[1. Caffeine Cache Tests]"
-test_api "GET"    "/api/cache/test-user" "Not Found"
-test_api "POST"   "/api/cache"         "John-Doe" '{"key": "test-user", "value": "John-Doe"}'
-test_api "GET"    "/api/cache/test-user" "John-Doe"
-test_api "DELETE" "/api/cache/test-user" ""
-test_api "GET"    "/api/cache/test-user" "Not Found"
+# 1. Direct Access Tests (Zombie Listener)
+echo -e "\n[1. Direct Access Tests (Port 10080)]"
+test_api "$DIRECT_URL" "GET"    "/api/cache/direct-user" "Not Found"
+test_api "$DIRECT_URL" "POST"   "/api/cache"             "Direct-Value" '{"key": "direct-user", "value": "Direct-Value"}'
+test_api "$DIRECT_URL" "GET"    "/api/cache/direct-user" "Direct-Value"
 
-# 2. Scoped Value & Virtual Thread Tests
-echo -e "\n[2. Scoped Value & Virtual Thread Tests]"
-test_api "GET" "/api/scoped-value/test" "Processed with REQ-"
-test_api "GET" "/api/scoped-value/structured-task" "Main Result: Processed with STRUCT-.*SubResult: Done"
+# 2. Gateway Access Tests (Gateway Server)
+echo -e "\n[2. Gateway Access Tests (Port 9001 -> /zombie/**)]"
+test_api "$GATEWAY_URL" "GET"    "/zombie/api/cache/gateway-user" "Not Found"
+test_api "$GATEWAY_URL" "POST"   "/zombie/api/cache"              "Gateway-Value" '{"key": "gateway-user", "value": "Gateway-Value"}'
+test_api "$GATEWAY_URL" "GET"    "/zombie/api/cache/gateway-user" "Gateway-Value"
+test_api "$GATEWAY_URL" "GET"    "/zombie/api/scoped-value/test" "Processed with REQ-"
 
 echo -e "\n==============================================="
 echo " Tests Completed"

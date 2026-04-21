@@ -1,0 +1,23 @@
+server:
+  port: 9000
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: zombie-listener
+          uri: http://zombie-listener:10080
+          predicates:
+            - Path=/zombie/**
+          filters:
+            - StripPrefix=1
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+  structured:
+    format:
+      console: ecs
+    ecs:
+      service:
+        name: gateway-server
