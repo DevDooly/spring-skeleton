@@ -26,8 +26,10 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
+ADD https://repo1.maven.org/maven2/io/projectreactor/tools/blockhound/1.0.16.RELEASE/blockhound-1.0.16.RELEASE.jar blockhound.jar
+
 COPY --from=build /app/gateway-server/target/gateway-server-*.jar app.jar
 
 EXPOSE 9000
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+AllowRedefinitionToAddDeleteMethods", "-javaagent:blockhound.jar", "-jar", "app.jar"]

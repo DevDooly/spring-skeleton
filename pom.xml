@@ -43,6 +43,7 @@
         <springdoc.version>2.8.5</springdoc.version>
         <scalar.version>0.6.23</scalar.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <blockhound.version>1.0.16.RELEASE</blockhound.version>
     </properties>
 
     <repositories>
@@ -60,6 +61,17 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor.tools</groupId>
+                <artifactId>blockhound</artifactId>
+                <version>${blockhound.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor.tools</groupId>
+                <artifactId>blockhound-junit-platform</artifactId>
+                <version>${blockhound.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>

@@ -1,6 +1,7 @@
 package com.devdooly.skeleton.listener.zombie;
 
 import com.devdooly.skeleton.listener.zombie.core.ZombieListener;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -8,13 +9,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import reactor.blockhound.BlockHound;
 
+@Slf4j
 @SpringBootApplication
 public class ZombieApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ZombieApplication.class, args);
     }
+
 
     @Bean
     public ApplicationListener<ApplicationReadyEvent> applicationListener(ZombieListener zombieListener) {
