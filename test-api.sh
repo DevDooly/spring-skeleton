@@ -39,17 +39,22 @@ echo "==============================================="
 echo " Starting API Integration Tests"
 echo "==============================================="
 
+# Generate a unique suffix for this run
+ID=$RANDOM
+
 # 1. Direct Access Tests (Zombie Listener)
 echo -e "\n[1. Direct Access Tests (Port 10080)]"
-test_api "$DIRECT_URL" "GET"    "/api/cache/direct-user" "Not Found"
-test_api "$DIRECT_URL" "POST"   "/api/cache"             "Direct-Value" '{"key": "direct-user", "value": "Direct-Value"}'
-test_api "$DIRECT_URL" "GET"    "/api/cache/direct-user" "Direct-Value"
+test_api "$DIRECT_URL" "DELETE" "/api/cache/user-$ID" ""
+test_api "$DIRECT_URL" "GET"    "/api/cache/user-$ID" "Not Found"
+test_api "$DIRECT_URL" "POST"   "/api/cache"          "val-$ID" "{\"key\": \"user-$ID\", \"value\": \"val-$ID\"}"
+test_api "$DIRECT_URL" "GET"    "/api/cache/user-$ID" "val-$ID"
 
 # 2. Gateway Access Tests (Gateway Server)
 echo -e "\n[2. Gateway Access Tests (Port 9001 -> /zombie/**)]"
-test_api "$GATEWAY_URL" "GET"    "/zombie/api/cache/gateway-user" "Not Found"
-test_api "$GATEWAY_URL" "POST"   "/zombie/api/cache"              "Gateway-Value" '{"key": "gateway-user", "value": "Gateway-Value"}'
-test_api "$GATEWAY_URL" "GET"    "/zombie/api/cache/gateway-user" "Gateway-Value"
+test_api "$GATEWAY_URL" "DELETE" "/zombie/api/cache/gw-user-$ID" ""
+test_api "$GATEWAY_URL" "GET"    "/zombie/api/cache/gw-user-$ID" "Not Found"
+test_api "$GATEWAY_URL" "POST"   "/zombie/api/cache"             "gw-val-$ID" "{\"key\": \"gw-user-$ID\", \"value\": \"gw-val-$ID\"}"
+test_api "$GATEWAY_URL" "GET"    "/zombie/api/cache/gw-user-$ID" "gw-val-$ID"
 test_api "$GATEWAY_URL" "GET"    "/zombie/api/scoped-value/test" "Processed with REQ-"
 
 echo -e "\n==============================================="
