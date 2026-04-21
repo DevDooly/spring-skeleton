@@ -1,78 +1,63 @@
-# Spring Boot 스켈레톤 프로젝트
+# Spring Boot MSA Skeleton Project
 
-이 프로젝트는 현대적이고 고성능 서비스를 구축하기 위해 설계된 멀티 모듈 Spring Boot 3 애플리케이션 스켈레톤입니다. 반응형 웹 서비스, 데이터베이스 상호 작용 및 Avro 직렬화를 통한 Kafka 메시징이 필요한 애플리케이션을 위한 견고한 기반을 제공합니다.
+이 프로젝트는 현대적이고 고성능 마이크로서비스를 구축하기 위한 멀티 모듈 Spring Boot 3 애플리케이션 스켈레톤입니다. 반응형 웹 서비스, 가상 스레드 기반 최적화, 데이터베이스 상호 작용 및 Kafka 메시징을 위한 견고한 기반을 제공합니다.
 
-## 기술 스택
+## 🚀 주요 기술 스택 및 특징
 
-- **Java:** 21
-- **Spring Boot:** 3.4.1
-- **웹:** Spring WebFlux (반응형)
-- **데이터베이스:** JDBI 3 및 HikariCP (연결 풀링용)
-- **메시징:** Confluent Avro Schema를 사용한 Apache Kafka (데이터 직렬화용)
-- **빌드:** Apache Maven
+### 핵심 프레임워크
+- **Java:** 21 LTS (Scoped Value 등 최신 기능을 위한 `--enable-preview` 활성화)
+- **Spring Boot:** 3.4.1 (Structured Logging 지원)
+- **Spring Cloud Gateway:** MSA 환경의 단일 진입점 및 라우팅 (Zuul 대체)
 
-## 프로젝트 구조
+### 고성능 및 안정성
+- **Concurrency:** Virtual Threads(가상 스레드) 및 Scoped Value를 통한 효율적인 컨텍스트 전파
+- **Cache:** Caffeine Cache 기반 로컬 캐싱 적용
+- **Blocking Detection:** BlockHound를 통한 Non-blocking 스레드 내 블로킹 호출 실시간 감지 (Java Agent 방식)
 
-이 프로젝트는 **MSA(Microservices Architecture) 기반**으로 설계되어 여러 모듈로 나뉘며, 각 모듈은 특정 역할을 가집니다:
-현재는 zombie-listener 만 구현되어 있으나, 목적에 맞게 애플리케이션을 구성하여 KAFKA 를 파이프라인으로 서비스간 의존도를 낮췄습니다.
+### 모니터링 및 문서화
+- **Logging:** EFK 스택(Elasticsearch, Fluent-bit, Kibana) 통합 및 Spring Boot 3.4 Structured Logging(ECS Format) 적용
+- **API Docs:** Scalar를 활용한 현대적이고 인터랙티브한 API 문서 자동화 (Swagger UI 대체)
 
-<img src="./assets/structure_v01.png" title="feature" alt=""/>
+## 📁 프로젝트 구조
 
-### `skeleton` (루트)
-모든 하위 모듈과 공유 종속성 버전을 관리하는 부모 POM입니다.
+<img src="./assets/structure_v01.png" title="Architecture" alt=""/>
 
-### `avro-lib`
-- `src/main/resources/avro`에 위치한 Avro 스키마(`.avsc`)를 관리합니다.
-- `avro-maven-plugin`을 사용하여 빌드 프로세스 중에 스키마로부터 Java 소스 파일을 자동으로 생성합니다.
-- Kafka 메시지에 대한 타입 안전한 데이터 계약을 보장합니다.
+- **`gateway-server` (New):** 모든 요청을 수신하고 각 서비스(`zombie-listener` 등)로 전달하는 API Gateway
+- **`zombie-listener`:** Kafka 토픽 수신 및 비즈니스 로직 처리 예시 서비스 (Caffeine Cache, Scoped Value 적용)
+- **`core`:** 핵심 비즈니스 로직, WebFlux 설정, JDBI 리포지토리 및 Kafka 공통 구성
+- **`avro-lib`:** Avro 스키마 관리 및 Java 클래스 자동 생성
+- **`common`:** 공통 유틸리티 및 가상 스레드 헬퍼
+- **`utils`:** 각종 테스트 코드 및 예시 모음
 
-### `common`
-- 여러 모듈에서 사용되는 공통 유틸리티 및 헬퍼 클래스를 포함하는 공유 라이브러리입니다.
-- 사용자 정의 스레드 팩토리, 로깅 데코레이터 및 기타 일반적인 목적의 코드를 포함합니다.
+## 🛠 CI/CD 및 운영 도구
 
-### `core`
-- 주요 비즈니스 로직을 포함하는 메인 애플리케이션 모듈입니다.
-- Spring WebFlux를 사용하여 반응형 웹 API를 구현합니다.
-- 서비스, 리포지토리(직접 SQL 제어를 위한 JDBI 사용) 및 Kafka 프로듀서/컨슈머를 구성합니다.
-- 데이터 직렬화를 위해 `avro-lib`에, 공유 유틸리티를 위해 `common`에 의존합니다.
+`cicd/` 폴더에 배포 및 운영을 위한 자동화 설정이 포함되어 있습니다.
 
-### `zombie-listener`
-- 보조 실행 가능 Spring Boot 애플리케이션의 예시입니다.
-- `core` 모듈에 의존하여 해당 구성 요소와 구성을 재사용합니다.
-- Kafka 토픽을 수신하고 메시지를 처리하는 것과 같은 특정 백그라운드 작업을 실행하도록 설계되었습니다.
+- **Docker:** Multi-stage build를 통한 최적화된 이미지 생성 (`cicd/docker/`)
+- **Kubernetes:** `kind` 클러스터 기반 Deployment/Service 구성 (`cicd/k8s/`)
+- **Jenkins:** CI 파이프라인 구성을 위한 `Jenkinsfile` 제공
+- **EFK:** 로그 수집 및 시각화 환경 구성 매니페스트 (`cicd/efk/`)
 
-## 빌드
+## 🚦 시작하기 (Quick Start)
 
-전체 프로젝트를 빌드하고 모든 아티팩트를 생성하려면 루트 디렉토리에서 다음 명령을 실행합니다:
+배포 및 테스트를 위한 상세 가이드는 [cicd/DEPLOY-GUIDE.md](./cicd/DEPLOY-GUIDE.md)를 참조하세요.
 
+### 1. 포트 포워딩 설정
+로컬 환경에서 Kubernetes 서비스에 접속하기 위해 제공된 스크립트를 사용합니다.
 ```bash
-mvn clean install
+./setup-port-forward.sh
 ```
 
-## 애플리케이션 실행
-
-Spring Boot Maven 플러그인을 사용하거나 패키징된 JAR 파일을 실행하여 두 개의 실행 가능한 애플리케이션(`core` 및 `zombie-listener`)을 실행할 수 있습니다.
-
-### 코어 서비스
-
-**Maven 사용:**
+### 2. API 통합 테스트
+Caffeine Cache, Scoped Value, Gateway 라우팅 기능을 한 번에 검증합니다.
 ```bash
-mvn spring-boot:run -pl core
+./test-api.sh
 ```
 
-**JAR 사용:**
-```bash
-java -jar core/target/core-*.jar
-```
+### 3. 주요 접속 정보
+- **API Gateway:** `http://localhost:9001`
+- **API 문서 (Scalar):** `http://localhost:10080/scalar` (직접) 또는 `http://localhost:9001/zombie/scalar` (Gateway)
+- **로그 시각화 (Kibana):** `http://localhost:5601`
 
-### 좀비 리스너
-
-**Maven 사용:**
-```bash
-mvn spring-boot:run -pl zombie-listener
-```
-
-**JAR 사용:**
-```bash
-java -jar zombie-listener/target/zombie-listener-*.jar
-```
+---
+*이 프로젝트는 지속적으로 최신 Java/Spring 기술 트렌드를 반영하여 업데이트됩니다.*
