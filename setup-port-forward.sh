@@ -4,6 +4,8 @@
 GATEWAY_PORT=9001
 ZOMBIE_PORT=10080
 KIBANA_PORT=5601
+PROMETHEUS_PORT=9090
+GRAFANA_PORT=3000
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -43,6 +45,12 @@ start_forward "zombie-listener" $ZOMBIE_PORT 80 "default"
 
 # 3. Kibana (Logs)
 start_forward "kibana" $KIBANA_PORT 5601 "kube-system"
+
+# 4. Prometheus (Metrics)
+start_forward "prometheus-service" $PROMETHEUS_PORT 8080 "kube-system"
+
+# 5. Grafana (Visualization)
+start_forward "grafana" $GRAFANA_PORT 3000 "kube-system"
 
 echo -e "\n==============================================="
 echo " Active Port-Forwarding Processes:"

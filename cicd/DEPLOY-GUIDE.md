@@ -64,6 +64,19 @@ kubectl port-forward -n kube-system svc/kibana 5601:5601
 - **주소**: `http://localhost:5601`
 - **초기 설정**: `Stack Management` -> `Index Patterns`에서 `fluent-bit-*` 패턴을 생성하면 로그를 조회할 수 있습니다.
 
+### 리소스 및 메트릭 모니터링 (Prometheus & Grafana)
+애플리케이션의 리소스 사용량과 성능 메트릭을 실시간으로 확인합니다.
+
+```bash
+# 한 번에 모든 포트 포워딩 설정 (추천)
+./setup-port-forward.sh
+```
+
+- **Prometheus**: `http://localhost:9090` (데이터 수집 서버)
+- **Grafana**: `http://localhost:3000` (시각화 대시보드)
+  - **초기 데이터 소스 설정**: `Configuration` -> `Data Sources` -> `Prometheus` 선택 -> URL에 `http://prometheus-service.kube-system:8080` 입력 후 Save & Test.
+  - **대시보드 추천**: `Import` 메뉴에서 ID `11378` (JVM Dashboard) 또는 `4701`을 입력하면 Spring Boot 전용 대시보드가 즉시 구성됩니다.
+
 ### 자동 테스트 스크립트 실행
 새 터미널을 열고 제공된 쉘 스크립트를 실행하여 API 동작을 검증합니다.
 

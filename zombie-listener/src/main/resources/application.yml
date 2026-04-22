@@ -20,6 +20,15 @@ scalar:
   openapi:
     url: /api-docs
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus, info, metrics
+  metrics:
+    tags:
+      application: zombie-listener
+
 ---
 spring:
   config:
