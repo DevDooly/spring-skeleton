@@ -45,6 +45,7 @@
         <prometheus.version>1.14.3</prometheus.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <blockhound.version>1.0.16.RELEASE</blockhound.version>
+        <jjwt.version>0.12.6</jjwt.version>
     </properties>
 
     <repositories>
@@ -93,6 +94,24 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>${h2database.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <!-- JJWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <!-- Cache -->

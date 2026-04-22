@@ -1,16 +1,13 @@
 package com.devdooly.skeleton.core.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class LoginRequest {
     private String username;
     private String password;
-    private String role; // e.g., "ROLE_USER"
 }
