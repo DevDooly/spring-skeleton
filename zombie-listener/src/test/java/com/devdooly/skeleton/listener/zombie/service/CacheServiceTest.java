@@ -1,12 +1,12 @@
 package com.devdooly.skeleton.listener.zombie.service;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.CacheManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 public class CacheServiceTest {
@@ -15,7 +15,7 @@ public class CacheServiceTest {
     private CacheService cacheService;
 
     @Autowired
-    private CacheManager cacheManager;
+    private Cache<String, String> zombieCache;
 
     @Test
     public void testCache() {
@@ -25,23 +25,22 @@ public class CacheServiceTest {
         // 1. Put data
         cacheService.putData(key, value);
 
-        // 2. Get data - should be from cache now
+        // 2. Get data - should be from cache
         String retrievedValue = cacheService.getData(key);
         assertEquals(value, retrievedValue);
 
-        // 3. Verify it's in the cache
-        assertNotNull(cacheManager.getCache("zombieCache"));
-        assertEquals(value, cacheManager.getCache("zombieCache").get(key).get());
+        // 3. Verify it's in the Caffeine cache directly
+        assertEquals(value, zombieCache.getIfPresent(key));
 
         // 4. Update data
         String newValue = "newValue";
         cacheService.putData(key, newValue);
         assertEquals(newValue, cacheService.getData(key));
-        assertEquals(newValue, cacheManager.getCache("zombieCache").get(key).get());
+        assertEquals(newValue, zombieCache.getIfPresent(key));
 
         // 5. Remove data
         cacheService.removeData(key);
         assertEquals("Not Found", cacheService.getData(key));
-        assertEquals(null, cacheManager.getCache("zombieCache").get(key));
+        assertNull(zombieCache.getIfPresent(key));
     }
 }
