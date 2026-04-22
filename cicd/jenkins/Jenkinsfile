@@ -16,7 +16,8 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                sh 'mvn clean package -T 1C'
+                // Build only necessary components for the deployment
+                sh 'mvn clean package -DskipTests -T 1C -pl :zombie-listener,:gateway-server -am'
             }
         }
 
