@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.Closeable;
 
-@Component
 public class JdbcDataServiceImpl implements JdbcDataService, Closeable {
 
     private final JdbcRepository jdbcRepository;

@@ -4,7 +4,6 @@ import com.devdooly.skeleton.core.dto.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import jakarta.annotation.PostConstruct;
@@ -12,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class AuthService {
 

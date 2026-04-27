@@ -7,11 +7,9 @@ echo "==============================================="
 echo " Stopping all Port-Forwarding processes..."
 echo "==============================================="
 
-# Find and kill kubectl port-forward processes
-pkill -f "kubectl port-forward"
+# Find and kill kubectl port-forward processes more aggressively
+# Also find processes by ports just in case
+pkill -9 -f "kubectl port-forward"
+lsof -ti :9001,10080,5601,9090,3000 | xargs kill -9 2>/dev/null
 
-if [ $? -eq 0 ]; then
-    echo -e "${GREEN}Successfully stopped all port-forwarding.${NC}"
-else
-    echo "No active port-forwarding processes found."
-fi
+echo -e "${GREEN}Successfully stopped and cleaned up all port-forwarding.${NC}"

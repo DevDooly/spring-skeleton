@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class JwtUtils {
 
     // In a real app, move this to properties/secrets

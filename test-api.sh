@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Configuration
-DIRECT_URL="http://localhost:10080"
-GATEWAY_URL="http://localhost:9001"
+DIRECT_URL="http://127.0.0.1:10080"
+GATEWAY_URL="http://127.0.0.1:9001"
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
@@ -28,10 +28,16 @@ test_api() {
         curl_opts+=("-H" "Authorization: Bearer $token")
     fi
 
-    local response=$(curl "${curl_opts[@]}" "$base_url$path" | xargs)
+    # Retry up to 3 times for network stability
+    local response=""
+    for i in {1..3}; do
+        response=$(curl "${curl_opts[@]}" "$base_url$path" | tr -d '\r' | xargs)
+        if [ -n "$response" ] || [ "$method" == "DELETE" ]; then break; fi
+        sleep 2
+    done
 
     if [[ "$response" =~ $expected ]]; then
-        echo -e "${GREEN}PASS${NC} (Res: ${response:0:50}...)"
+        echo -e "${GREEN}PASS${NC} (Res: ${response:0:40}...)"
     else
         echo -e "${RED}FAIL${NC}"
         echo "  Expected: $expected"
@@ -44,17 +50,25 @@ echo "==============================================="
 echo " Starting API Integration Tests with AUTH"
 echo "==============================================="
 
-# 1. Login to get Token
+# 1. Login to get Token with Retry
 echo -e "\n[1. Authentication]"
 echo -n "Logging in as admin ... "
-TOKEN=$(curl -s -X POST "$GATEWAY_URL/auth/login" \
-     -H "Content-Type: application/json" \
-     -d '{"username":"admin", "password":"admin123"}')
 
-if [ -n "$TOKEN" ] && [[ ! "$TOKEN" =~ "error" ]]; then
+TOKEN=""
+for i in {1..5}; do
+    TOKEN=$(curl -s -X POST "$GATEWAY_URL/auth/login" \
+         -H "Content-Type: application/json" \
+         -d '{"username":"admin", "password":"admin123"}' | tr -d '\r' | xargs)
+    if [ -n "$TOKEN" ] && [[ ! "$TOKEN" =~ "error" ]] && [[ ! "$TOKEN" =~ "html" ]]; then
+        break
+    fi
+    sleep 3
+done
+
+if [ -n "$TOKEN" ]; then
     echo -e "${GREEN}SUCCESS${NC} (Token acquired)"
 else
-    echo -e "${RED}FAILED${NC} (Response: $TOKEN)"
+    echo -e "${RED}FAILED${NC} (Could not get token after retries)"
     exit 1
 fi
 

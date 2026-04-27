@@ -3,6 +3,7 @@ package com.devdooly.skeleton.gateway.config;
 import com.devdooly.skeleton.core.config.CoreConfig;
 import com.devdooly.skeleton.core.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -16,6 +17,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Configuration
 @EnableWebFluxSecurity
 @Import(CoreConfig.class)
@@ -39,24 +41,34 @@ public class SecurityConfig {
     }
 
     private WebFilter jwtFilter() {
-        return (ServerWebExchange exchange, WebFilterChain chain) -> {
+        return (exchange, chain) -> {
+            String path = exchange.getRequest().getURI().getPath();
+            
+            // Skip JWT check for white-listed paths
+            if (isWhiteListed(path)) {
+                return chain.filter(exchange);
+            }
+
             String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
                 if (authService.isValidToken(token)) {
-                    // In a real app, you would set the SecurityContext here
+                    // Token is valid, proceed to routing
                     return chain.filter(exchange);
                 }
             }
             
-            // If it's a public path, let it pass (Spring Security authorizeExchange will handle the final decision)
-            String path = exchange.getRequest().getURI().getPath();
-            if (path.startsWith("/auth/") || path.contains("/actuator/") || path.contains("/scalar") || path.contains("/api-docs")) {
-                return chain.filter(exchange);
-            }
-
+            // Not a white-listed path and no valid token
+            log.warn("[SecurityFilter] Unauthorized access attempt to: {}", path);
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         };
+    }
+
+    private boolean isWhiteListed(String path) {
+        return path.startsWith("/auth/") || 
+               path.contains("/actuator") || 
+               path.contains("/scalar") || 
+               path.contains("/api-docs");
     }
 }
