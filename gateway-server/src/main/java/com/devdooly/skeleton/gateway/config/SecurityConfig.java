@@ -51,7 +51,7 @@ public class SecurityConfig {
 
             String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
+                String token = authHeader.substring(7).trim();
                 if (authService.isValidToken(token)) {
                     // Token is valid, proceed to routing
                     return chain.filter(exchange);
