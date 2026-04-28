@@ -1,5 +1,22 @@
 # Spring Boot MSA Skeleton Project
 
+![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.1-brightgreen?logo=springboot)
+![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2024.0.0-blue?logo=spring)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-6.4-green?logo=springsecurity)
+![JWT](https://img.shields.io/badge/JWT-JSON%20Web%20Token-black?logo=jsonwebtokens)
+![Caffeine](https://img.shields.io/badge/Cache-Caffeine-red)
+![BlockHound](https://img.shields.io/badge/Performance-BlockHound-blueviolet)
+![Docker](https://img.shields.io/badge/Docker-Container-blue?logo=docker)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-K8S-blue?logo=kubernetes)
+![Jenkins](https://img.shields.io/badge/CI%2FCD-Jenkins-orange?logo=jenkins)
+![Elasticsearch](https://img.shields.io/badge/Logging-Elasticsearch-005571?logo=elasticsearch)
+![Kibana](https://img.shields.io/badge/Logging-Kibana-005571?logo=kibana)
+![Prometheus](https://img.shields.io/badge/Metrics-Prometheus-e6522c?logo=prometheus)
+![Grafana](https://img.shields.io/badge/Monitoring-Grafana-F46800?logo=grafana)
+![Kafka](https://img.shields.io/badge/Message-Kafka-black?logo=apachekafka)
+![Scalar](https://img.shields.io/badge/API%20Docs-Scalar-lightgrey)
+
 현대적이고 고성능 마이크로서비스를 구축하기 위한 멀티 모듈 Spring Boot 3.4 애플리케이션 스켈레톤입니다. 반응형 웹 서비스, 가상 스레드 최적화, 보안, 모니터링 및 자동화된 CI/CD 환경을 제공합니다.
 
 <img src="./assets/structure_v01.png" title="Architecture" alt=""/>
